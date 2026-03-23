@@ -1,26 +1,28 @@
 <?php
-// config/db_confi.php
-$url = getenv('MYSQL_URL') ?: getenv('DATABASE_URL');
-
+// config/db_config.php
+$host = getenv('MYSQLHOST') ?: 'localhost';
+$user = getenv('MYSQLUSER') ?: 'root';
+$pass = getenv('MYSQLPASSWORD') ?: '';
+$db   = getenv('MYSQLDATABASE') ?: 'gestion_reservas';
+$port = getenv('MYSQLPORT') ?: '3306';
+$url = getenv('MYSQL_URL');
 if ($url) {
     $dbparts = parse_url($url);
-    $host = $dbparts['host'];
-    $user = $dbparts['user'];
-    $pass = $dbparts['pass'];
-    $db   = ltrim($dbparts['path'], '/');
-    $port = $dbparts['port'];
-} else {
-    $host = 'localhost';
-    $user = 'root';
-    $pass = '';
-    $db   = 'gestion_reservas';
-    $port = '3306';
+    if (isset($dbparts['host'])) {
+        $host = $dbparts['host'];
+        $user = $dbparts['user'];
+        $pass = $dbparts['pass'];
+        $db   = ltrim($dbparts['path'], '/');
+        $port = $dbparts['port'];
+    }
 }
 
 try {
-    $pdo = new PDO("mysql:host=$host;port=$port;dbname=$db;charset=utf8mb4", $user, $pass, [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+    $dsn = "mysql:host=$host;port=$port;dbname=$db;charset=utf8mb4";
+    $pdo = new PDO($dsn, $user, $pass, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
     ]);
 } catch (PDOException $e) {
-    die("Error: " . $e->getMessage());
+    die("Error de conexión: " . $e->getMessage());
 }
