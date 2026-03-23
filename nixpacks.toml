@@ -1,2 +1,5 @@
+[phases.setup]
+    nixPkgs = ["...", "php82Packages.pdo_mysql"]
+
 [variables]
     PHP_EXTENSION_INSTALL = "pdo,pdo_mysql"
