@@ -11,6 +11,7 @@ if (!$host) {
     $user = 'root';
     $pass = '';
     $db   = 'gestion_reservas';
+    $port = '3306';
 }
 
 try {
@@ -20,5 +21,5 @@ try {
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
     ]);
 } catch (PDOException $e) {
-    die("Error de conexión (Intentando conectar a $host): " . $e->getMessage());
+    die("Error de conexión (Host intentado: $host): " . $e->getMessage());
 }
