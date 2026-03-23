@@ -1,21 +1,10 @@
 <?php
 // config/db_config.php
-$host = getenv('MYSQLHOST') ?: 'localhost';
+$host = getenv('MYSQLHOST') ?: '127.0.0.1'; 
 $user = getenv('MYSQLUSER') ?: 'root';
 $pass = getenv('MYSQLPASSWORD') ?: '';
-$db   = getenv('MYSQLDATABASE') ?: 'gestion_reservas';
+$db   = getenv('MYSQLDATABASE') ?: 'railway'; 
 $port = getenv('MYSQLPORT') ?: '3306';
-$url = getenv('MYSQL_URL');
-if ($url) {
-    $dbparts = parse_url($url);
-    if (isset($dbparts['host'])) {
-        $host = $dbparts['host'];
-        $user = $dbparts['user'];
-        $pass = $dbparts['pass'];
-        $db   = ltrim($dbparts['path'], '/');
-        $port = $dbparts['port'];
-    }
-}
 
 try {
     $dsn = "mysql:host=$host;port=$port;dbname=$db;charset=utf8mb4";
