@@ -1,10 +1,17 @@
 <?php
 // config/db_config.php
-$host = getenv('MYSQLHOST') ?: '127.0.0.1'; 
-$user = getenv('MYSQLUSER') ?: 'root';
-$pass = getenv('MYSQLPASSWORD') ?: '';
-$db   = getenv('MYSQLDATABASE') ?: 'railway'; 
+$host = getenv('MYSQLHOST'); 
+$user = getenv('MYSQLUSER');
+$pass = getenv('MYSQLPASSWORD');
+$db   = getenv('MYSQLDATABASE');
 $port = getenv('MYSQLPORT') ?: '3306';
+
+if (!$host) {
+    $host = '127.0.0.1';
+    $user = 'root';
+    $pass = '';
+    $db   = 'gestion_reservas';
+}
 
 try {
     $dsn = "mysql:host=$host;port=$port;dbname=$db;charset=utf8mb4";
@@ -13,5 +20,5 @@ try {
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
     ]);
 } catch (PDOException $e) {
-    die("Error de conexión: " . $e->getMessage());
+    die("Error de conexión (Intentando conectar a $host): " . $e->getMessage());
 }
