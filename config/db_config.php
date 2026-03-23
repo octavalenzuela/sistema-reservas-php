@@ -1,12 +1,19 @@
 <?php
 // config/db_config.php
-$host = getenv('MYSQLHOST'); 
-$user = getenv('MYSQLUSER');
-$pass = getenv('MYSQLPASSWORD');
-$db   = getenv('MYSQLDATABASE');
-$port = getenv('MYSQLPORT') ?: '3306';
 
-if (!$host) {
+$url_str = getenv('MYSQL_URL');
+
+if ($url_str) {
+    $url_str = str_replace(['${{', '}}'], '', $url_str);
+    
+    $url = parse_url($url_str);
+    $host = $url['host'];
+    $user = $url['user'];
+    $pass = $url['pass'];
+    $db   = ltrim($url['path'], '/');
+    $port = $url['port'] ?: '3306';
+} else {
+    // Localhost (XAMPP)
     $host = '127.0.0.1';
     $user = 'root';
     $pass = '';
@@ -21,5 +28,5 @@ try {
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
     ]);
 } catch (PDOException $e) {
-    die("Error de conexión (Host intentado: $host): " . $e->getMessage());
+    die("Error de conexión (Host: $host): " . $e->getMessage());
 }
