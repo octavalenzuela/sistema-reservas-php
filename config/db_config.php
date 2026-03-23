@@ -1,18 +1,26 @@
 <?php
-// db_config.php
-$host = 'localhost';
-$db   = 'gestion_reservas';
-$user = 'root'; 
-$pass = '';     
-$charset = 'utf8mb4';
+// config/db_confi.php
+$url = getenv('MYSQL_URL') ?: getenv('DATABASE_URL');
+
+if ($url) {
+    $dbparts = parse_url($url);
+    $host = $dbparts['host'];
+    $user = $dbparts['user'];
+    $pass = $dbparts['pass'];
+    $db   = ltrim($dbparts['path'], '/');
+    $port = $dbparts['port'];
+} else {
+    $host = 'localhost';
+    $user = 'root';
+    $pass = '';
+    $db   = 'gestion_reservas';
+    $port = '3306';
+}
 
 try {
-    $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
-    $pdo = new PDO($dsn, $user, $pass, [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+    $pdo = new PDO("mysql:host=$host;port=$port;dbname=$db;charset=utf8mb4", $user, $pass, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
     ]);
-   
 } catch (PDOException $e) {
-    die("Error de conexión: " . $e->getMessage());
+    die("Error: " . $e->getMessage());
 }
