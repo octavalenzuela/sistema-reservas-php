@@ -1,0 +1,2 @@
+[variables]
+    PHP_EXTENSION_INSTALL = "pdo,pdo_mysql"
